@@ -60,12 +60,8 @@ int Buscar_Datos_Ord(int y[], int &m, int dat){
     while(i<m && y[i]<dat){
         i++;
     }
-    if(i>m || y[i]>dat){
-        if(i==0){
-            pos=-1;
-        }else{
+    if(i>=m || y[i]>dat){
             pos=-i;
-        }
     }else{
         pos=i;
     }
@@ -75,7 +71,7 @@ void Insercion_Datos_Ord(int y[], int &m, int Max, int dat){
     int pos;
     if(m<Max){
         pos=Buscar_Datos_Ord(y,m,dat);
-        if(pos<0){
+        if(pos<=0){
             m++;
             pos*=-1;
             for(int i=m; i>=pos+1; i--){
@@ -93,7 +89,7 @@ void Eliminar_Datos_Ord(int y[], int &m, int dat){
     int pos;
     if(m>0){
         pos=Buscar_Datos_Ord(y,m,dat);
-        if(pos>0){
+        if(pos>=0){
             m--;
             for(int i=pos; i<m; i++){
                 y[i]=y[i+1];
@@ -121,7 +117,7 @@ void Modificar_Datos_Ord(int y[], int &m, int dat, int dat2){
     int pos;
     if(m>0){
         pos=Buscar_Datos_Ord(y,m,dat);
-        if(pos>0){
+        if(pos>=0){
             y[pos]=dat2;
             Ordenar_array(y,m);
         }else{
@@ -234,6 +230,7 @@ int main(){
                                 cout<<y[i]<<" ";
                             }
                             cout<<endl;
+
                             break;
                         case 5:
                             salir3=true;
