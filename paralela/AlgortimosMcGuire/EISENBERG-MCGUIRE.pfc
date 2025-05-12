@@ -1,0 +1,51 @@
+program EISENBERGMCGUIRE;
+
+const 
+	N=2; 
+var 
+	S : array[0..N] of integer;
+	turno : integer;
+	x : integer;
+process type Proceso( i : integer );
+	var 
+		j : integer;
+	begin
+		repeat
+			S[i] := 1;
+			j := turno;
+			while j <> i do
+				begin
+					if S[j] <> 3 then
+						j := turno
+					else
+						j := (j + 1) mod N;
+				end;
+				S[i] := 2;
+				j := 0;
+				while (j < N) AND ((j = i) OR (S[j] <> 2)) do
+					j := j + 1;
+		until ((j >= N) AND ((turno = i) OR (S[turno] = 3)));
+		turno := i;
+		x := x + i;
+		writeln('P',i,' x = ',x);
+		j := (turno + 1) mod N;
+		while S[j] = 3 do
+			j := (j + 1) mod N;
+		turno := j;
+		S[i] := 3;
+	end;
+	
+var 
+	aux : integer;
+	proc : array[0..N] of Proceso;
+begin
+	for aux := 0 to N do
+		S[aux] := 3;
+	turno := random(N);
+	x := 0;
+	writeln('turno inicial = ',turno);
+	cobegin
+		for aux := 0 to N do
+			proc[aux](aux);
+	coend;
+end.

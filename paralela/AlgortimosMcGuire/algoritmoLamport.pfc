@@ -1,0 +1,67 @@
+program algoritmoLamport;
+const 
+	N=2; 
+var 
+	S : array[1..N] of boolean;
+	nt: array[1..N] of integer;
+	i, j: integer;
+	
+
+function ntmax(i:integer): integer;
+	var
+		k: integer;
+		max: integer;
+	begin
+		max:=nt[1];
+		for k:=2 to N do
+			if(nt[k]>max) then 
+				max:= nt[k];
+		ntmax:=max;
+	end;
+
+function ntmayorque(i, j: integer): boolean;
+	begin
+		if (nt[i] > nt[j]) then 
+			ntmayorque:=true
+			else if(nt[i]<nt[j]) then
+				ntmayorque:=false
+			else
+				ntmayorque:=(i>j);
+	end;
+	
+process type Proceso( i : integer );
+var 
+	j: integer;
+begin 
+	S[i] := true; 
+	nt[i]:= 1 + ntmax(i);
+	writeln('Proceso ', i, ' saca boleto: ', nt[i]);
+	S[i]:=false;
+	for j:= 1 to N do 
+		begin
+			while S[j] = true do
+				begin
+					writeln('Proceso ', i, ' espera a que el proceso ', j, ' escoja su boleto');
+				end;
+			while (nt[j]<>0) and ntmayorque(i,j)do
+				begin
+					writeln('Proceso ', i, ' espera a que el proceso ', j, ' con boleto ', nt[j], ' termine');
+				end;
+		end;
+	writeln('Proceso ', i, ' entra a la sección crítica');
+	
+	nt[i]:=0;
+end;
+var aux: integer;
+proc: array[1..N] of Proceso;
+begin
+	for i := 1 to N do
+		begin 
+			S[i] :=false;
+			nt[i] := 0;
+		end;
+	cobegin
+		for aux := 1 to N do
+			proc[aux](aux);
+	coend;
+end.
